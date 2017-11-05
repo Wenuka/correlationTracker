@@ -49,11 +49,16 @@ def run(source=0, dispLoc=False):
     for k, rect in enumerate(points):
         tracker[k].start_track(img, dlib.rectangle(*rect))
     
+
+
+
+
+
     temp_tracker = list(tracker) #to remove the deleted trackers from tracker without affecting for loop 
     
     while True:
-        print tracker
-        print temp_tracker
+        # print tracker
+        # print temp_tracker
         tracker = list(temp_tracker) 
         # Read frame from device or file
         retval, img = cam.read()
@@ -81,8 +86,9 @@ def run(source=0, dispLoc=False):
         for i in xrange(len(tracker)): #for number of objects to track
             # print len(tracker)
             # print i
-            tracker[i].update(img)
-
+            confdnc = tracker[i].update(img)
+            # print type(confdnc)
+            print confdnc
             # try:
             #   tracker[i].update(img)
             # except IndexError:
@@ -98,14 +104,32 @@ def run(source=0, dispLoc=False):
 
             # print type(pt1)
             # print type(temp_tracker)
-            # Remove objects which are out of frame
-            if (pt1[0]< threshld or pt2[0]>= width or pt1[1]< threshld or pt2[1]>=height ):
-                del temp_tracker[i]
+
+
+
+
+
+
+
+            if (pt1[0]< threshld or pt2[0]>= width or pt1[1]< threshld or pt2[1]>=height):
+                # del temp_tracker[i]
                 print "Object removed: out of the frame"
-                continue
+                # continue
+            if (confdnc < 3.5):
+                print "Low Confidence"
+                # continue
+
+
+
+
+
+
+
+
+
 
             cv2.rectangle(img, pt1, pt2, (255, 255, 255), 3)
-            print "Object {} tracked at [{}, {}] \r".format(i, pt1, pt2),
+            # print "Object {} tracked at [{}, {}] \r".format(i, pt1, pt2),
 
             # show location of box if mentionedd
             if dispLoc:
